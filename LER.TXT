@@ -1,0 +1,131 @@
+php ^8.2 | Laravel 11
+MySQL 8
+
+Este projeto consiste em uma API desenvolvida em Laravel,
+com foco no controle de vendas, produtos, estoque e 
+relatórios para uma lanchonete fictícia chamada Sabor da Vila Ltda.
+
+O código pode ser baixado e executado em qualquer computador 
+que possua os requisitos abaixo instalados.
+
+o usuário deve ter:
+
+-PHP 8.2 ou superior
+-Composer 2.x
+-MySQL ou MariaDB
+-Extensões PHP obrigatórias:
+-pdo_mysql
+-openssl
+-tokenizer
+-mbstring
+-xml
+-ctype
+-json
+-Opcional:
+Postman ou Insomnia (para testar as rotas da API)
+
+1- CLONAR O REPOSITÓRIO /////////////////////////////////////////
+git clone (link do seu repositório aqui)
+cd nome_do_projeto
+
+2- INSTALAR DEPENDÊNCIA /////////////////////////////////////////
+composer install
+
+3- CRIAR ARQUIVO .env /////////////////////////////////////////
+cp .env.example .env
+php artisan key:generate
+
+4- CONFIGURAR O BANCO /////////////////////////////////////////
+dentro do .env escrever
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+5- CRIAR TABELAS E DADOS INICIAIS /////////////////////////////////////////
+
+executar:php artisan migrate
+         php artisan db:seed
+que cria:
+Tabela de usuários
+Produtos iniciais
+Usuário administrador
+
+Com os dados criado pelo seeder:
+Email: admin@sabordavila.com
+Senha: admin123
+
+6. INICIANDO O SERVIDOR /////////////////////////////////////////
+php artisan serve
+
+A API ficará disponível em:
+http://localhost:8000
+
+7. AUTENTICANDO O TOKEN /////////////////////////////////////////
+
+Para acessar as rotas protegidas, é necessário gerar um token.
+
+Login (POST)
+Rota:
+/api/login
+
+
+Corpo da requisição:
+
+{
+  "email": "admin@sabordavila.com",
+  "password": "admin123"
+}
+
+
+Resposta:
+
+{
+  "token": "TOKEN_AQUI",
+  "user": { ... }
+}
+
+
+Esse token deve ser enviado em todas as requisições:
+Authorization: Bearer TOKEN_AQUI
+
+8- ROTAS DISPONÍVEIS /////////////////////////////////////////
+
+| Método | Rota               | Descrição        |
+| ------ | ------------------ | ---------------- |
+| GET    | /api/products      | Lista produtos   |
+| POST   | /api/products      | Cadastra produto |
+| GET    | /api/products/{id} | Detalhes         |
+| PUT    | /api/products/{id} | Atualiza         |
+| DELETE | /api/products/{id} | Desativa         |
+
+| Método | Rota       | Descrição          |
+| ------ | ---------- | ------------------ |
+| POST   | /api/sales | Registra uma venda |
+
+Formato da venda:
+{
+  "items": [
+    {"product_id": 1, "qty": 3},
+    {"product_id": 2, "qty": 1}
+  ]
+}
+
+Relatórios
+| Rota                    | Descrição                                 |
+| ----------------------- | ----------------------------------------- |
+| GET /api/reports/daily  | Relatório diário                          |
+| GET /api/reports/weekly | Relatório semanal                         |
+| GET /api/reports/alerts | Avisos (estoque baixo / validade próxima) |
+
+9- ESTRUTURA GERAL DO PROJETO //////////////////////////////////////////////////////
+app/
+ ├── Http/
+ │    ├── Controllers/
+ │    ├── Middleware/
+ │    └── Requests/
+ ├── Models/
+database/
+ ├── migrations/
+ └── seeders/
+routes/
+ └── api.php
